@@ -1,0 +1,5 @@
+[package]
+
+name = "baker-samefringe-rust"
+version = "0.0.1"
+authors = ["Franklin Chen <franklinchen@franklinchen.com>"]
