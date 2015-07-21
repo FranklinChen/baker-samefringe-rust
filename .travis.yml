@@ -1,8 +1,9 @@
 language: rust
 rust:
   - nightly
-  - beta
-  - stable
+# We are using unstable features.
+#  - beta
+#  - stable
 script:
   - cargo build --verbose
   - cargo test --verbose
