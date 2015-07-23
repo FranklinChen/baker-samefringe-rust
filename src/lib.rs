@@ -5,6 +5,7 @@
 #![feature(slice_patterns)]
 
 pub mod tree;
+pub mod immutable;
 pub mod iterators;
 
 pub mod algorithm;
