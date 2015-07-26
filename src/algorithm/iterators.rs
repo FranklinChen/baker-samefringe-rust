@@ -2,6 +2,8 @@ use std::iter::order;
 
 use tree::Tree;
 
+/// Very simple: get the two iterators, and compare their elements
+/// step by step.
 pub fn same_fringe<T: PartialEq>(tree1: &Tree<T>, tree2: &Tree<T>) -> bool
 {
     order::eq(tree1.iter(), tree2.iter())

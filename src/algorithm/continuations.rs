@@ -14,27 +14,9 @@ struct Generator<'a, T>(&'a Fn(&Consumer<T>) -> bool);
 /// - a new item plus the next generator to call
 struct Consumer<'a, T>(&'a Fn(Option<(&T, &Generator<T>)>) -> bool);
 
-/// For unwrapping convenience only.
-impl <'a, T> Generator<'a, T> {
-    #[inline]
-    fn run_g(&self, c: &Consumer<T>) -> bool {
-        let &Generator(closure) = self;
-        closure(c)
-    }
-}
-
-/// For unwrapping convenience only.
-impl <'a, T> Consumer<'a, T> {
-    #[inline]
-    fn run_c(&self, next: Option<(&T, &Generator<T>)>) -> bool {
-        let &Consumer(closure) = self;
-        closure(next)
-    }
-}
-
 /// Generator that tells the consumer that there are no more elements left.
 fn eof<T: PartialEq>(c: &Consumer<T>) -> bool {
-    c.run_c(None)
+    c.0(None)
 }
 
 /// Determine whether tree1 and tree2 have the same fringe.
@@ -55,9 +37,9 @@ pub fn same_fringe<T: PartialEq>(tree1: &Tree<T>, tree2: &Tree<T>) -> bool
 /// recursively with a new pair of generators.
 fn same_fringe_c<T: PartialEq>(xg: &Generator<T>, yg: &Generator<T>) -> bool
 {
-    xg.run_g(&Consumer(
+    xg.0(&Consumer(
         &(|x_next|
-          yg.run_g(&Consumer(
+          yg.0(&Consumer(
               &(|y_next|
                 match (x_next, y_next) {
                     (None, None) => true,
@@ -78,7 +60,7 @@ fn gen_fringe<T: PartialEq>(
     -> bool
 {
     match tree {
-        &Tree::Leaf(ref leaf) => c.run_c(Some((leaf, g))),
+        &Tree::Leaf(ref leaf) => c.0(Some((leaf, g))),
         &Tree::Forest(ref forest) => gen_fringe_l(&forest, c, g)
     }
 }
@@ -94,7 +76,7 @@ fn gen_fringe_l<T: PartialEq>(
 {
     match forest {
         [] =>
-            g.run_g(c),
+            g.0(c),
         [ref head, ref tail..] =>
             gen_fringe(head,
                        c,
