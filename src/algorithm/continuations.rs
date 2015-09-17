@@ -6,13 +6,13 @@ use tree::Tree;
 /// function types.
 ///
 /// A Consumer receives a Consumer to communicate to.
-struct Generator<'a, T>(&'a Fn(&Consumer<T>) -> bool);
+struct Generator<'a, T: 'a>(&'a Fn(&Consumer<T>) -> bool);
 
 /// A Consumer receives either:
 ///
 /// - end of data
 /// - a new item plus the next generator to call
-struct Consumer<'a, T>(&'a Fn(Option<(&T, &Generator<T>)>) -> bool);
+struct Consumer<'a, T: 'a>(&'a Fn(Option<(&T, &Generator<T>)>) -> bool);
 
 /// Generator that tells the consumer that there are no more elements left.
 fn eof<T: PartialEq>(c: &Consumer<T>) -> bool {
@@ -74,15 +74,14 @@ fn gen_fringe_l<T: PartialEq>(
     g: &Generator<T>)
     -> bool
 {
-    match forest {
-        [] =>
+    match forest.split_first() {
+        None =>
             g.0(c),
-        [ref head, ref tail..] =>
+        Some((head, tail)) =>
             gen_fringe(head,
                        c,
                        &Generator(&(|c2|
                                     gen_fringe_l(tail, c2, g))))
-
     }
 }
 

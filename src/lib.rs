@@ -2,7 +2,7 @@
 
 // Need Rust nightly, not beta or stable.
 #![feature(iter_order)]
-#![feature(slice_patterns)]
+#![feature(slice_splits)]
 
 pub mod tree;
 pub mod immutable;
