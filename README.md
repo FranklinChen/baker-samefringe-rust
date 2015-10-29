@@ -6,4 +6,4 @@ The interesting part of the mutually recursive generator-consumer solution is ho
 
 Of course, there are more idiomatic and modular ways to write `same_fringe`. In Rust, one standard way would be to laboriously create an `Iterator` with manually managed state, to support controlled mutation if desired, just as in C++.
 
-Currently builds only on `nightly`.
+Currently builds only on `nightly`, but Rust 1.5 stable will eventually accept this code.
